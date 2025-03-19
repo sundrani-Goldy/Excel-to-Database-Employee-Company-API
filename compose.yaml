@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Rj0Q8]o@W<-Oy21Y
+      - POSTGRES_DB=chatbot
+    ports:
+      - '7240:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  web:
+    env_file:
+      - .env
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db:
+    driver: local
