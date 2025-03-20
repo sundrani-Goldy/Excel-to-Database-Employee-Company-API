@@ -13,8 +13,13 @@ services:
   web:
     env_file:
       - .env
+    environment:
+      - DB_NAME=exceldb
+      - DB_USER_NAME=postgres
+      - DB_PASSWORD=Rj0Q8]o@W<-Oy21Y
+      - DB_HOST_NAME=db
+      - DB_PORT=5432
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:

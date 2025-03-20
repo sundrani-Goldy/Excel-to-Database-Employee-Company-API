@@ -57,7 +57,12 @@ Follow these steps to set up the project:
 
 ## Running the Project
 
-1. **Start the Server:**
+1. **Make entrypoint.sh Executable:**
+   ```bash
+   chmod +x entrypoint.sh
+   ```
+
+2. **Start the Server:**
    ```bash
    docker compose up
    ```
