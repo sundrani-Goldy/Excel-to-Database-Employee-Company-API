@@ -4,7 +4,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Rj0Q8]o@W<-Oy21Y
-      - POSTGRES_DB=chatbot
+      - POSTGRES_DB=exceldb
     ports:
       - '7240:5432'
     volumes:
