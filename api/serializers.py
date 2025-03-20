@@ -33,7 +33,6 @@ class FileUploadSerializer(serializers.Serializer):
         try:
             file = validated_data['file']
             
-            # Read the Excel/CSV file
             try:
                 if file.name.endswith('.xlsx'):
                     df = pd.read_excel(file)
@@ -45,20 +44,17 @@ class FileUploadSerializer(serializers.Serializer):
                     "Unable to read the file. Please ensure it's a valid Excel or CSV file."
                 )
 
-            # Validate required columns
             missing_columns = [col for col in self.REQUIRED_COLUMNS if col not in df.columns]
             if missing_columns:
                 raise serializers.ValidationError({
                     "columns": f"Missing required columns: {', '.join(missing_columns)}"
                 })
 
-            # Check for empty dataframe
             if df.empty:
                 raise serializers.ValidationError({
                     "data": "The uploaded file contains no data"
                 })
 
-            # Group data by company
             company_groups = df.groupby('COMPANY_NAME')
             
             processed_companies = 0
@@ -74,29 +70,25 @@ class FileUploadSerializer(serializers.Serializer):
                     continue
 
                 try:
-                    # Check if company exists
                     company_name = company_name.strip()
                     company = Company.objects.filter(name=company_name).first()
                     
-                    if not company:  # Only create if company doesn't exist
-                        # Create company
+                    if not company: 
                         company_serializer = CompanySerializer(data={'name': company_name})
                         if company_serializer.is_valid(raise_exception=True):
                             company = company_serializer.save()
                             processed_companies += 1
                     
-                    # Process employees
                     for index, record in company_data.iterrows():
                         try:
                             employee_data = self._prepare_employee_data(record, company)
                             
-                            # Check if employee exists
                             existing_employee = Employee.objects.filter(
                                 company=company,
                                 employee_id=employee_data['employee_id']
                             ).first()
                             
-                            if not existing_employee:  # Only create if employee doesn't exist
+                            if not existing_employee:  
                                 employee_serializer = EmployeeSerializer(data=employee_data)
                                 if employee_serializer.is_valid():
                                     employee_serializer.save(company=company)

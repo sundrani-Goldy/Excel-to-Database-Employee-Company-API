@@ -1,6 +1,5 @@
 django
 djangorestframework
-django-allauth
 django-rest-auth-dj4
 django-rest-passwordreset
 drf-yasg
